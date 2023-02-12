@@ -22,8 +22,46 @@ rangeModule.queryRange(13, 15); // return False,(Numbers like 14, 14.03, 14.17 i
 rangeModule.queryRange(16, 17); // return True, (The number 16 in [16, 17) is still being tracked, despite the remove operation)
   """
 #用一个排序list， 插入的时候用bisect找相加的区间， 然后合并更改
+#用一个sortedlist， pop掉相交的区间
 
-    class RangeModule:
+#或者用一个interval tree, 去除的时候情况太多了。 
+
+from sortedcontainers import SortedList
+
+class RangeModule:
+
+    def __init__(self):
+        self.intervals = SortedList()
+
+    def addRange(self, left: int, right: int) -> None:
+        k = self.intervals.bisect_left([left, right])
+        while k < len(self.intervals) and right >= self.intervals[k][0]: 
+            right = max(right, self.intervals[k][1])
+            self.intervals.pop(k)
+        if k and self.intervals[k-1][1] >= left: 
+            left = min(left, self.intervals[k-1][0])
+            right = max(right, self.intervals[k-1][1])
+            self.intervals.pop(k-1)
+        self.intervals.add([left, right])
+
+    def queryRange(self, left: int, right: int) -> bool:
+        k = self.intervals.bisect_left([left, right])
+        return k and self.intervals[k-1][0] <= left < right <= self.intervals[k-1][1] or k < len(self.intervals) and self.intervals[k][0] <= left < right <= self.intervals[k][1] 
+
+    def removeRange(self, left: int, right: int) -> None:
+        k = self.intervals.bisect_left([left, right])
+        while k < len(self.intervals) and self.intervals[k][0] <= right: 
+            if right < self.intervals[k][1]: 
+                self.intervals[k][0] = right 
+                break 
+            else: self.intervals.pop(k)
+        if k and left < self.intervals[k-1][1]: 
+            if right < self.intervals[k-1][1]: self.intervals.add([right, self.intervals[k-1][1]])
+            self.intervals[k-1][1] = left 
+
+
+
+class RangeModule:
 
     def __init__(self):
         self.ranges = []
