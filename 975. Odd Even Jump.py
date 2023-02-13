@@ -9,8 +9,6 @@ A starting index is good if, starting from that index, you can reach the end of 
 
 Return the number of good starting indices.
 
- 
-
 Example 1:
 
 Input: arr = [10,13,12,14,15]
@@ -21,44 +19,56 @@ From starting index i = 1 and i = 2, we can make our 1st jump to i = 3, then we 
 From starting index i = 3, we can make our 1st jump to i = 4, so we have reached the end.
 From starting index i = 4, we have reached the end already.
 In total, there are 2 different starting indices i = 3 and i = 4, where we can reach the end with some number of
-jumps. """
+jumps."""  """ """
 
-import collections
-import math
-
+#1.  找每个位置的奇偶步下一步位置 odd_nxt, even_next。 可以对位置数组按值大小排序， 并用stack来求解
+#2. dp(start, odd_even) = dp(odd_nxt[start] if odd_even == 1 else even_next[start], odd_even^1) 
 class Solution:
-    def oddEvenJumps(self, arr) -> int:
-        mem=collections.defaultdict(bool)
+    def oddEvenJumps(self, arr: List[int]) -> int:
         N = len(arr)
+        def makeStack( sorted_indexes):
+            result = [None] * len(sorted_indexes)
+            stack = []
+            for i in sorted_indexes:
+                while stack and i > stack[-1]:
+                    result[stack.pop()] = i
+                stack.append(i)
+            # delete stack as a memory optimization
+            del stack
+            return result
+        sorted_indexes = sorted(range(len(arr)), key = lambda i: arr[i])
+        smallest_r2l = makeStack(sorted_indexes)
+
+        sorted_indexes.sort(key = lambda i: arr[i], reverse = True)
+        biggest_r2l = makeStack(sorted_indexes)
+        
+        def makeStack(self, sorted_indexes):
+            result = [None] * len(sorted_indexes)
+            stack = []
+            for i in sorted_indexes:
+                while stack and i > stack[-1]:
+                    result[stack.pop()] = i
+                stack.append(i)
+            # delete stack as a memory optimization
+            return result
+        mem= {}
         def dp(start, oddeven):
-            if start == N:
+            if start == N-1:
                 return True
             if oddeven == 1: # odd jump
-                mn = math.inf
-                mn_i = -1
-                for j in range(start+1, N):
-                    if arr[j] >= arr[start]:
-                        if arr[j] < mn:
-                            mn_i = j
-                            mn = arr[j]
-                if mn_i == -1: 
+                nxt = smallest_r2l[start]
+                if nxt is None:
                     mem[start, oddeven] = False
                     return False
-                succ = dp(mn_i, oddeven^1)
+                succ = dp(nxt, oddeven^1)
                 mem[start, oddeven] = succ
                 return succ
             if oddeven == 0: #even jump
-                mx = -math.inf
-                mx_i = -1
-                for j in range(start+1, N):
-                    if arr[j] <= arr[start]:
-                        if arr[j] > mx:
-                            mx_i = j
-                            mx = arr[j]
-                if mx_i == -1:
+                nxt = biggest_r2l[start]
+                if nxt is None:
                     mem[start, oddeven] = False
                     return False
-                succ = dp(mx_i, oddeven^1)
+                succ = dp(nxt, oddeven^1)
                 mem[start, oddeven] = succ
                 return succ
         ans = 0
@@ -67,6 +77,6 @@ class Solution:
             if succ : ans +=1
         return ans
 
-sol = Solution()
-arr = [10,13,12,14,15]
-sol.oddEvenJumps(arr)
+
+
+
