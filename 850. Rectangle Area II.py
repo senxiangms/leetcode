@@ -4,6 +4,7 @@ Calculate the total area covered by all rectangles in the plane. Any area covere
 
 Return the total area. Since the answer may be too large, return it modulo 109 + 7.
 
+pending review
 
 Input: rectangles = [[0,0,2,2],[1,0,2,3],[1,0,3,1]]
 Output: 6
