@@ -15,7 +15,9 @@ Input: nums = [2,2,2,2,2]
 Output: 5
 Explanation: The length of the longest increasing subsequence is 1, and there are 5 increasing subsequences of length 1, so output 5.
   
-  
+#插牌游戏， 对每一张牌a， 要找到牌堆顶（最小的那种）比a大的最左牌堆， 这是以a结尾的牌能形成lis最长的序列。 放进牌堆， 这个牌堆的顶部就是a。 
+#然后再找前一堆牌里比a小的牌 (存的负数， 所以小的牌在末尾）， 从n_path数组里找数量（因为n_path存的是累计和）。 
+
   
 
 class Solution:
