@@ -20,15 +20,16 @@ Output: 0
 #sold记录卖出的收益
 #hold记录持有的收益
 #rest记录休息获得收益
-#对每一笔价格, 选择卖出， 可以获得sold = hold+price, 选择持有hold = max(hold, rest - price), 选择休息rest = max(rest, prevsold)
+#对每一笔价格, 选择卖出， 可以获得sold = hold+price, 选择持有或者买入hold = max(hold, rest - price), 选择休息rest = max(rest, prevsold)
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        sold = -math.inf
-        hold = -math.inf
+        if len(prices) == 0: return 0
+        sold = 0
+        hold = -prices[0]
         rest = 0
-        for price in prices:
+        for i in range(1, len(prices)):
             prevsold = sold
-            sold = hold + price
-            hold = max(hold, rest - price)
+            sold = max(sold, hold + prices[i])
+            hold = max(hold, rest - prices[i])
             rest = max(rest, prevsold)
-        return max(sold, rest)
+        return max(rest, sold)

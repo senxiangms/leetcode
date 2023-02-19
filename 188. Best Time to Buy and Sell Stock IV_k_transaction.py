@@ -18,8 +18,10 @@ Output: 7
 
 Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4. Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3. """
 
-#对1次交易， 2次交易， 三次交易分别计算每个股票价格位置的获利
+#对1次交易， 2次交易， 三次， k次交易分别计算每个股票价格位置的获利
 #两次交易是特殊情况
+#对每一个价格， 有两个选择， 选择持股不动， 手里现金为上一个价格的hold， 或者买入， 上轮交易获利减去当前价格
+#对每个价格， 当前获利， 是前一个价格的获利， 或者卖出hold+price[i]
 class Solution:
     def maxProfit(self, k: int, prices: List[int]) -> int:
         if 2*k >= len(prices): 
@@ -28,9 +30,9 @@ class Solution:
         pnl = [0]*len(prices)
         
         for _ in range(k):
-            maxd = -prices[0]
+            hold = -prices[0]
             for i in range(1, len(prices)):
                 old = pnl[i]
-                pnl[i] = max(pnl[i-1], maxd+prices[i])
-                maxd = max(maxd, old-prices[i])
+                pnl[i] = max(pnl[i-1], hold+prices[i])
+                hold = max(hold, old-prices[i])
         return pnl[-1]
