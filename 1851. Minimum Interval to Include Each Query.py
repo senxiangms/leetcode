@@ -24,6 +24,10 @@ Explanation: The queries are processed as follows:
 - Query = 19: None of the intervals contain 19. The answer is -1.
 - Query = 5: The interval [2,5] is the smallest interval containing 5. The answer is 5 - 2 + 1 = 4.
 - Query = 22: The interval [20,25] is the smallest interval containing 22. The answer is 25 - 20 + 1 = 6. """
+#区间排序， query 排序
+#对每一个query， 1. 把所有起始点小于query的区间进堆， 堆顶为size最小的区间， 2. 把结束点小于query的区间都pop出来，这些区间
+# 都不可能包含接下来的q，  则留下的堆顶区间就是最小包含区间。 
+
 
 import heapq
 
