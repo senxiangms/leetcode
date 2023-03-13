@@ -14,7 +14,7 @@ Output: 2
 Explanation: At least two cameras are needed to monitor all nodes of the tree. The above image shows one of the valid configurations of camera placement.
   """
 
-#自底向上贪心， 节点自己有camera的话， 则设为1， 如果自己被叶子cover ， 设为2
+#dfs 自底向上贪心， 节点自己有camera的话， 则设为1， 如果自己被叶子cover ， 设为2
 
 class Solution:
     def minCameraCover(self, root: Optional[TreeNode]) -> int:
